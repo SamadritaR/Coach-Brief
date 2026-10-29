@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DUSQ Coach Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a night console. Controls on top, the brief beside the nights it cites. Single dark look, deliberately. */
+:root {
+  color-scheme: dark;
+  --night: #0E1322;
+  --panel: #161D31;
+  --panel-2: #1D2640;
+  --line: #2A3555;
+  --ink: #E7EAF3;
+  --muted: #9CA6C2;
+  --dusk: #F0B65A;
+  --dusk-soft: rgba(240,182,90,0.16);
+  --calm: #7FA6E8;
+  --calm-soft: rgba(127,166,232,0.16);
+  --good: #6FCF97;
+  --good-soft: rgba(111,207,151,0.15);
+  --risk: #F2805E;
+  --risk-soft: rgba(242,128,94,0.16);
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--night); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 40px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 24px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dusk); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.08; margin: 4px 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 60ch; margin: 0; }
+.note { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px dashed var(--line); padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+
+.controls { display: grid; grid-template-columns: auto 1fr; gap: 16px 28px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.users { display: flex; gap: 8px; flex-wrap: wrap; }
+.user-btn { font: inherit; font-size: 14px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; display: flex; gap: 8px; align-items: center; }
+.user-btn .dot { width: 8px; height: 8px; border-radius: 50%; }
+.user-btn[aria-pressed="true"] { color: var(--ink); background: var(--panel-2); border-color: var(--calm); }
+.user-btn:focus-visible, .metric-btn:focus-visible, .item:focus-visible, .approve:focus-visible, input:focus-visible { outline: 2px solid var(--dusk); outline-offset: 2px; }
+.day { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.day-top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; }
+.day-top b { font-family: var(--mono); font-weight: 500; }
+.day-top span { color: var(--muted); }
+input[type=range] { width: 100%; accent-color: var(--dusk); }
+.window { display: grid; grid-template-columns: repeat(30, 1fr); gap: 2px; height: 8px; }
+.window i { border-radius: 2px; background: var(--line); }
+.window i.past { background: var(--calm); }
+.window i.wk2 { background: var(--dusk); }
+.window i.today { box-shadow: 0 0 0 2px var(--ink); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px; min-width: 0; }
+.brief-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.brief-head h2 { font-family: var(--mono); font-weight: 500; font-size: 13px; letter-spacing: 0.1em; margin: 0; text-transform: uppercase; }
+.brief-head span { font-size: 13px; color: var(--muted); }
+.items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.item { display: grid; grid-template-columns: 104px minmax(0,1fr) auto; gap: 12px; align-items: start; padding: 14px 10px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 10px; background: transparent; color: inherit; font: inherit; text-align: left; width: 100%; border-left: 3px solid transparent; }
+.item:hover { background: var(--panel-2); }
+.item[aria-pressed="true"] { background: var(--panel-2); border-left-color: var(--dusk); }
+.tag { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding-top: 3px; }
+.t-good .tag { color: var(--good); } .t-risk .tag { color: var(--risk); } .t-info .tag { color: var(--calm); } .t-brand .tag { color: var(--dusk); } .t-muted .tag { color: var(--muted); }
+.item p { margin: 0; font-size: 15px; }
+.src { font-family: var(--mono); font-size: 12px; white-space: nowrap; padding: 3px 9px; border-radius: 999px; }
+.t-good .src { background: var(--good-soft); color: var(--good); } .t-risk .src { background: var(--risk-soft); color: var(--risk); }
+.t-info .src { background: var(--calm-soft); color: var(--calm); } .t-brand .src { background: var(--dusk-soft); color: var(--dusk); }
+.t-muted .src { background: var(--panel-2); color: var(--muted); }
+.brief-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 16px; flex-wrap: wrap; }
+.brief-foot small { color: var(--muted); font-size: 13px; }
+.approve { font: inherit; font-weight: 600; font-size: 14px; color: var(--night); background: var(--dusk); border: none; border-radius: 10px; padding: 10px 16px; cursor: pointer; }
+.approve.done { background: var(--good); }
+
+.metrics { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.metric-btn { font: inherit; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.metric-btn[aria-pressed="true"] { color: var(--ink); border-color: var(--dusk); background: var(--dusk-soft); }
+.chart-title { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; margin-bottom: 6px; }
+.chart-title span { color: var(--muted); font-size: 13px; }
+svg { width: 100%; height: auto; display: block; }
+svg text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+.rules { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.rule { border-top: 2px solid var(--line); padding-top: 12px; }
+.rule h3 { font-family: var(--display); font-weight: 500; font-size: 17px; margin: 0 0 4px; }
+.rule p { margin: 0; color: var(--muted); font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 16px; }
+footer a { color: var(--dusk); }
+
+@media (max-width: 820px) {
+  .main { grid-template-columns: minmax(0,1fr); }
+  .controls { grid-template-columns: minmax(0,1fr); }
+  .rules { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 480px) {
+  .item { grid-template-columns: minmax(0,1fr) auto; }
+  .item .tag { grid-column: 1 / -1; }
+  .rules { grid-template-columns: minmax(0,1fr); }
+  .note { white-space: normal; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bar { transition: opacity .2s ease, fill .2s ease; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">A working proposal for DUSQ</div>
+      <h1>Coach Brief</h1>
+      <p class="lede">The read a sleep coach gets before every call. It drafts the prep from a user’s nights, every line points to the nights behind it, and the coach approves before anything is used.</p>
+    </div>
+    <div class="note">Synthetic data · not DUSQ data</div>
+  </header>
+
+  <section class="controls" aria-label="Choose a user and day">
+    <div class="users" role="group" aria-label="User">
+      <button class="user-btn" id="u-a" data-user="a" aria-pressed="true"><span class="dot" style="background:var(--good)"></span>User 0412 · improving</button>
+      <button class="user-btn" id="u-b" data-user="b" aria-pressed="false"><span class="dot" style="background:var(--risk)"></span>User 0587 · slipping</button>
+    </div>
+    <div class="day">
+      <div class="day-top"><b id="dayLabel">Day 14 of 30</b><span id="daysLeft"></span></div>
+      <input type="range" id="day" min="1" max="30" value="14" aria-label="Day since delivery">
+      <div class="window" id="window" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="main">
+    <article class="card" aria-label="Brief">
+      <div class="brief-head"><h2 id="briefTitle">Brief</h2><span>Tap a line to see its nights</span></div>
+      <ul class="items" id="items"></ul>
+      <div class="brief-foot">
+        <small id="approveNote">Nothing reaches the user until a coach approves.</small>
+        <button class="approve" id="approve">Approve for session</button>
+      </div>
+    </article>
+
+    <article class="card" aria-label="Nights">
+      <div class="metrics" role="group" aria-label="Metric" id="metrics"></div>
+      <div class="chart-title"><b id="chartName"></b><span id="chartNote"></span></div>
+      <div id="chart"></div>
+      <div class="legend">
+        <span><i style="background:var(--dusk)"></i>Cited by the selected line</span>
+        <span><i style="background:var(--calm)"></i>Other nights so far</span>
+        <span><i style="background:var(--line)"></i>Not slept yet</span>
+      </div>
+    </article>
+  </section>
+
+  <section class="rules" aria-label="How the brief decides">
+    <div class="rule"><h3>Baseline first</h3><p>Nights 1 to 3 set the user’s own baseline. Every change is measured against them, not against an average person.</p></div>
+    <div class="rule"><h3>Last seven nights</h3><p>Each brief reads the week since the last check in, so the coach sees what moved since they last spoke.</p></div>
+    <div class="rule"><h3>No source, no flag</h3><p>A line appears only when specific nights support it, and it names them.</p></div>
+    <div class="rule"><h3>The window matters</h3><p>Return risk is judged against the 30 day refund window, so coaches spend time where a user might leave.</p></div>
+  </section>
+
+  <footer>
+    <span>Built by Samadrita Roy Chowdhury as a proposal for DUSQ. All users and nights are synthetic.</span>
+    <a href="https://github.com/SamadritaR" target="_blank" rel="noopener">github.com/SamadritaR</a>
+  </footer>
+</div>
+
+<script>
+const USERS = {
+  a: { id: '0412',
+    wake:  [5,6,5,5,4,5,4,3,4,3,3,2,3,2,2,3,2,2,2,1,2,2,1,2,2,1,2,1,2,2],
+    onset: [38,42,35,40,33,30,28,31,74,29,26,24,25,22,27,23,21,24,20,22,19,21,23,20,18,22,19,21,20,18],
+    stim:  [14,15,13,12,13,11,12,10,11,34,9,8,9,8,7,8,7,7,6,7,6,6,7,5,6,6,5,6,5,6],
+    deep:  [44,46,43,47,48,50,52,51,49,53,55,56,58,57,60,59,61,62,60,63,62,64,63,62,65,64,66,65,64,66] },
+  b: { id: '0587',
+    wake:  [5,5,6,5,6,5,5,6,5,6,6,5,7,6,6,5,6,7,6,6,5,6,6,7,6,5,6,6,7,6],
+    onset: [45,50,48,62,55,58,66,52,49,71,64,58,69,60,57,66,63,70,58,61,65,68,59,62,64,70,66,61,63,67],
+    stim:  [12,13,11,3,12,2,13,12,3,11,2,12,3,11,12,2,13,3,12,11,2,12,3,12,11,3,12,2,11,12],
+    deep:  [42,41,43,40,42,41,40,42,39,41,40,40,39,41,40,39,40,38,40,39,38,40,39,38,39,40,38,39,38,39] }
+};
+const METRICS = {
+  wake:  { name: 'Wakeups after 3 AM', unit: '', short: 'Wakeups' },
+  onset: { name: 'Time to fall asleep', unit: ' min', short: 'Sleep onset' },
+  stim:  { name: 'Stimulation bursts per night', unit: '', short: 'Stimulation' },
+  deep:  { name: 'Deep sleep', unit: ' min', short: 'Deep sleep' }
+};
+const state = { user: 'a', day: 14, metric: 'wake', sel: 0, approved: false };
+const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+const nightsLabel = ns => {
+  if (!ns.length) return 'No nights yet';
+  if (ns.length === 1) return 'Night ' + ns[0];
+  const run = ns.every((n, i) => i === 0 || n === ns[i - 1] + 1);
+  return run ? 'Nights ' + ns[0] + ' to ' + ns[ns.length - 1] : ns.length + ' nights';
+};
+
+function buildBrief(u, d) {
+  const base = {}; Object.keys(METRICS).forEach(m => base[m] = mean(u[m].slice(0, 3)));
+  if (d < 4) return [{ tag: 'Baseline', tone: 'muted', metric: 'wake', nights: range(1, d),
+    text: 'Collecting baseline. The first brief is ready after night 3.' }];
+  const start = Math.max(4, d - 6), win = range(start, d), n = win.length, items = [];
+  const v = (m, k) => u[m][k - 1];
+
+  const below = win.filter(k => v('wake', k) <= base.wake * 0.75);
+  const improving = below.length >= Math.ceil(n / 2);
+  if (improving) items.push({ tag: 'Changed', tone: 'good', metric: 'wake', nights: below,
+    text: 'Wakeups after 3 AM down on ' + below.length + ' of the last ' + n + ' nights. Baseline was ' + base.wake.toFixed(1) + ' a night.' });
+  else { const flat = win.filter(k => !below.includes(k));
+    items.push({ tag: 'Changed', tone: 'risk', metric: 'wake', nights: flat,
+    text: 'No drop in wakeups yet. ' + flat.length + ' of the last ' + n + ' nights are at or above baseline.' }); }
+
+  const late = win.filter(k => v('onset', k) > 60);
+  if (late.length === 1) items.push({ tag: 'Ask', tone: 'info', metric: 'onset', nights: late,
+    text: 'It took ' + v('onset', late[0]) + ' minutes to fall asleep on night ' + late[0] + '. What happened that evening?' });
+  else if (late.length > 1) items.push({ tag: 'Ask', tone: 'info', metric: 'onset', nights: late,
+    text: 'Falling asleep took over an hour on ' + late.length + ' recent nights. Ask about the evening wind down.' });
+
+  const high = win.filter(k => v('stim', k) > base.stim * 2);
+  high.forEach(k => items.push({ tag: 'Flag', tone: 'risk', metric: 'stim', nights: [k],
+    text: 'Stimulation fired ' + (v('stim', k) / base.stim).toFixed(1) + 'x baseline on night ' + k + '. Check patch fit and placement.' }));
+  const low = win.filter(k => v('stim', k) < base.stim * 0.35);
+  if (low.length) items.push({ tag: 'Flag', tone: 'risk', metric: 'stim', nights: low,
+    text: 'Stimulation near zero on ' + low.length + (low.length === 1 ? ' night' : ' nights') + '. The patch likely lost contact. Walk through placement on the call.' });
+
+  const deepUp = mean(win.map(k => v('deep', k))) / base.deep - 1;
+  const left = 30 - d;
+  if (d < 7) items.push({ tag: 'Return risk', tone: 'muted', metric: 'deep', nights: [],
+    text: 'Too early to call. Gains usually build by week 2.' });
+  else if (improving || deepUp >= 0.15) items.push({ tag: 'Return risk', tone: 'good', metric: 'deep', nights: win,
+    text: 'Low. Gains are showing ' + (d <= 14 ? 'before day 14.' : 'and holding.') });
+  else items.push({ tag: 'Return risk', tone: 'risk', metric: 'deep', nights: win,
+    text: left > 0 ? 'High. No measurable gains and ' + left + (left === 1 ? ' day' : ' days') + ' left to return. Book a fit check call this week.'
+                   : 'High. The refund window has closed without gains. Plan a recovery call.' });
+
+  if (d >= 10 && deepUp >= 0.2) items.push({ tag: 'Story', tone: 'brand', metric: 'deep', nights: win,
+    text: 'Deep sleep up ' + Math.round(deepUp * 100) + '% over baseline across ' + nightsLabel(win).toLowerCase() + '. Ask if they would share it.' });
+  return items;
+}
+function range(a, b) { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; }
+
+const $ = id => document.getElementById(id);
+let brief = [];
+
+function render() {
+  const u = USERS[state.user], d = state.day;
+  brief = buildBrief(u, d);
+  if (state.sel >= brief.length) state.sel = 0;
+  const left = 30 - d;
+  $('dayLabel').textContent = 'Day ' + d + ' of 30';
+  $('daysLeft').textContent = left > 0 ? left + (left === 1 ? ' day' : ' days') + ' left in the refund window' : 'Refund window closed';
+  $('window').innerHTML = range(1, 30).map(k => '<i class="' + (k <= d ? (k >= 14 ? 'wk2' : 'past') : '') + (k === d ? ' today' : '') + '"></i>').join('');
+  $('briefTitle').textContent = 'Brief · User ' + u.id + ' · Day ' + d;
+  document.querySelectorAll('.user-btn').forEach(b => b.setAttribute('aria-pressed', b.dataset.user === state.user));
+
+  $('items').innerHTML = brief.map((it, i) =>
+    '<li><button class="item t-' + it.tone + '" data-i="' + i + '" aria-pressed="' + (i === state.sel) + '">' +
+    '<span class="tag">' + it.tag + '</span><p>' + it.text + '</p><span class="src">' + nightsLabel(it.nights) + '</span></button></li>').join('');
+  document.querySelectorAll('.item').forEach(b => b.addEventListener('click', () => {
+    state.sel = +b.dataset.i; state.metric = brief[state.sel].metric; render();
+  }));
+
+  const ap = $('approve');
+  ap.textContent = state.approved ? 'Approved' : 'Approve for session';
+  ap.classList.toggle('done', state.approved);
+  $('approveNote').textContent = state.approved ? 'Approved by the coach. Ready for the call.' : 'Nothing reaches the user until a coach approves.';
+
+  $('metrics').innerHTML = Object.keys(METRICS).map(m =>
+    '<button class="metric-btn" data-m="' + m + '" aria-pressed="' + (m === state.metric) + '">' + METRICS[m].short + '</button>').join('');
+  document.querySelectorAll('.metric-btn').forEach(b => b.addEventListener('click', () => { state.metric = b.dataset.m; render(); }));
+  drawChart(u, d);
+}
+
+function drawChart(u, d) {
+  const m = state.metric, data = u[m], meta = METRICS[m];
+  const cited = (brief[state.sel] && brief[state.sel].metric === m) ? brief[state.sel].nights : [];
+  const base = mean(data.slice(0, 3));
+  const W = 600, H = 230, L = 34, R = 10, T = 14, B = 26;
+  const max = Math.ceil(Math.max(...data, base) * 1.15);
+  const y = val => T + (H - T - B) * (1 - val / max);
+  const bw = (W - L - R) / 30;
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + meta.name + ' for nights 1 to 30">';
+  [0, 0.5, 1].forEach(f => { const val = Math.round(max * f), yy = y(val);
+    s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + yy + '" y2="' + yy + '" stroke="var(--line)" stroke-width="1"/>' +
+         '<text x="' + (L - 6) + '" y="' + (yy + 3) + '" text-anchor="end">' + val + '</text>'; });
+  data.forEach((val, i) => { const k = i + 1, x = L + i * bw + 2, h = (H - B) - y(val);
+    const fill = k > d ? 'var(--line)' : cited.includes(k) ? 'var(--dusk)' : 'var(--calm)';
+    const op = k > d ? 0.55 : (cited.length && !cited.includes(k) ? 0.45 : 1);
+    s += '<rect class="bar" x="' + x + '" y="' + y(val) + '" width="' + (bw - 4) + '" height="' + Math.max(h, 1) + '" rx="2" fill="' + fill + '" opacity="' + op + '"><title>Night ' + k + ': ' + val + meta.unit + (k > d ? ' (not slept yet)' : '') + '</title></rect>'; });
+  const by = y(base);
+  s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + by + '" y2="' + by + '" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7"/>';
+  s += '<text x="' + (W - R) + '" y="' + (by - 5) + '" text-anchor="end" style="fill:var(--ink)">baseline ' + base.toFixed(1) + '</text>';
+  [1, 10, 20, 30].forEach(k => { s += '<text x="' + (L + (k - 0.5) * bw) + '" y="' + (H - 8) + '" text-anchor="middle">' + k + '</text>'; });
+  s += '</svg>';
+  $('chart').innerHTML = s;
+  $('chartName').textContent = meta.name;
+  $('chartNote').textContent = cited.length ? 'Highlighting ' + nightsLabel(cited).toLowerCase() : 'Nights 1 to 30';
+}
+
+document.querySelectorAll('.user-btn').forEach(b => b.addEventListener('click', () => {
+  state.user = b.dataset.user; state.sel = 0; state.metric = 'wake'; state.approved = false; render(); }));
+$('day').addEventListener('input', e => { state.day = +e.target.value; state.sel = 0; state.metric = 'wake'; state.approved = false; render(); });
+$('approve').addEventListener('click', () => { state.approved = !state.approved; render(); });
+render();
+</script>
+</body>
+</html>
