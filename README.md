@@ -2,7 +2,7 @@
 
 A working prototype I built as a proposal for DUSQ, the sleep regulation wearable.
 
-**Live demo:** https://samadritar.github.io/dusq-coach-brief/
+**Live demo:** https://samadritar.github.io/Coach-Brief/
 
 ## The problem
 
